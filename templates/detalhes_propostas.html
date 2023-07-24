@@ -1,0 +1,34 @@
+<!-- detalhes_propostas.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Detalhes das Propostas</title>
+</head>
+<body>
+    <h1>Detalhes das Propostas para {{ nome_corretor }} no mês de {{ mes }}</h1>
+    <table border="1">
+        <tr>
+            <th>ID</th>
+            <th>Nome Empresa</th>
+            <th>CNPJ</th>
+            <th>Operadora do Plano</th>
+            <th>Data de Implantação</th>
+            <th>Quantidade de Vidas</th>
+            <th>Valor da Proposta</th>
+            <th>CPF do Titular</th>
+        </tr>
+        {% for proposta in propostas %}
+        <tr>
+            <td>{{ proposta[0] }}</td>
+            <td>{{ proposta[1] }}</td>
+            <td>{{ proposta[2] }}</td>
+            <td>{{ proposta[3] }}</td>
+            <td>{{ proposta[4] }}</td>
+            <td>{{ proposta[5] }}</td>
+            <td>{{ proposta[6] }}</td>
+            <td>{{ proposta[7] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

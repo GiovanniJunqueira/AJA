@@ -10,12 +10,15 @@
             <th>Nome do Corretor</th>
             <th>Mês</th>
             <th>Total de Comissão</th>
+            <th>Detalhes das Propostas</th>
         </tr>
         {% for comissao in comissoes %}
         <tr>
             <td>{{ comissao[0] }}</td>
             <td>{{ comissao[1].strftime('%B %Y') }}</td>
             <td>R$ {{ comissao[2] }}</td>
+            <!-- Corrija a chamada para a função detalhes_propostas -->
+            <td><a href="{{ url_for('detalhes_propostas', nome_corretor=comissao[0], mes=comissao[1].strftime('%Y-%m')) }}">Detalhes</a></td>
         </tr>
         {% endfor %}
     </table>

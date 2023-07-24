@@ -1,5 +1,6 @@
 import sqlite3
 from flask import Flask, render_template, request, redirect, url_for
+from datetime import datetime  # Importe o módulo datetime
 
 app = Flask(__name__)
 
@@ -16,7 +17,7 @@ def create_table():
                       nome_empresa TEXT,
                       cnpj TEXT,
                       operadora_plano TEXT,
-                      data_implantacao DATE,
+                      data_implantacao TEXT, -- Altere para o tipo TEXT para manter a data como string
                       quantidade_vidas INTEGER,
                       valor_proposta REAL,
                       cpf_titular TEXT,
@@ -41,12 +42,24 @@ def get_propostas():
     conn.close()
     return propostas
 
+def get_comissoes():
+    conn = connect_db()
+    cursor = conn.cursor()
+    cursor.execute('SELECT nome_corretor, strftime("%Y-%m", data_implantacao) as mes, SUM(valor_proposta) FROM propostas GROUP BY nome_corretor, mes')
+    comissoes = cursor.fetchall()
+
+    # Converta a coluna "mes" em objetos datetime
+    comissoes = [(corretor, datetime.strptime(mes, "%Y-%m"), total) for corretor, mes, total in comissoes]
+
+    conn.close()
+    return comissoes
+
 @app.route('/')
 def index():
     return render_template('index.html')
 
 @app.route('/registrar', methods=['GET', 'POST'])
-def registrar():
+def registrar_proposta():
     if request.method == 'POST':
         nome_empresa = request.form['nome_empresa']
         cnpj = request.form['cnpj']
@@ -64,10 +77,29 @@ def registrar():
     return render_template('registrar_proposta.html')
 
 @app.route('/visualizar')
-def visualizar():
-    propostas = get_propostas()
-    return render_template('visualizar_comissoes.html', propostas=propostas)
+def visualizar_comissoes():
+    comissoes = get_comissoes()
+
+    # Adicione mensagens de depuração para verificar os dados recuperados
+    print("Dados de comissões:")
+    for comissao in comissoes:
+        print(comissao)
+
+    return render_template('visualizar_comissoes.html', comissoes=comissoes)
 
 if __name__ == '__main__':
     create_table()
-    app.run(debug=True)
+
+    # Adicione a opção 'host' para que o servidor seja acessível em outras máquinas na rede local
+    app.run(debug=True, host='0.0.0.0')
+
+
+@app.route('/detalhes_propostas/<string:nome_corretor>/<string:mes>')
+def detalhes_propostas(nome_corretor, mes):
+    conn = connect_db()
+    cursor = conn.cursor()
+    cursor.execute('SELECT * FROM propostas WHERE nome_corretor = ? AND strftime("%Y-%m", data_implantacao) = ?', (nome_corretor, mes))
+    propostas = cursor.fetchall()
+    conn.close()
+
+    return render_template('detalhes_propostas.html', propostas=propostas, nome_corretor=nome_corretor, mes=mes)
