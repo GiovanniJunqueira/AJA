@@ -5,7 +5,7 @@
     <title>Detalhes das Propostas</title>
 </head>
 <body>
-    <h1>Detalhes das Propostas para {{ nome_corretor }} no mês de {{ mes }}</h1>
+    <h1>Detalhes das Propostas para {{ nome_corretor }} no mês de {{ mes.strftime('%B %Y') }}</h1>
     <table border="1">
         <tr>
             <th>ID</th>

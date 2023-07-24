@@ -87,19 +87,22 @@ def visualizar_comissoes():
 
     return render_template('visualizar_comissoes.html', comissoes=comissoes)
 
-if __name__ == '__main__':
-    create_table()
-
-    # Adicione a opção 'host' para que o servidor seja acessível em outras máquinas na rede local
-    app.run(debug=True, host='0.0.0.0')
-
-
 @app.route('/detalhes_propostas/<string:nome_corretor>/<string:mes>')
 def detalhes_propostas(nome_corretor, mes):
+    # Converta a string de data em um objeto datetime
+    mes_datetime = datetime.strptime(mes, "%Y-%m")
+
     conn = connect_db()
     cursor = conn.cursor()
     cursor.execute('SELECT * FROM propostas WHERE nome_corretor = ? AND strftime("%Y-%m", data_implantacao) = ?', (nome_corretor, mes))
     propostas = cursor.fetchall()
     conn.close()
 
-    return render_template('detalhes_propostas.html', propostas=propostas, nome_corretor=nome_corretor, mes=mes)
+    return render_template('detalhes_propostas.html', propostas=propostas, nome_corretor=nome_corretor, mes=mes_datetime)
+
+
+if __name__ == '__main__':
+    create_table()
+
+    # Adicione a opção 'host' para que o servidor seja acessível em outras máquinas na rede local
+    app.run(debug=True, host='0.0.0.0')
