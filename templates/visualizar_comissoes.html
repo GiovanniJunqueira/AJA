@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Visualizar Comissões</title>
+</head>
+<body>
+    <h1>Visualizar Comissões</h1>
+    <table border="1">
+        <tr>
+            <th>Nome do Corretor</th>
+            <th>Mês</th>
+            <th>Total de Comissão</th>
+        </tr>
+        {% for comissao in comissoes %}
+        <tr>
+            <td>{{ comissao[0] }}</td>
+            <td>{{ comissao[1].strftime('%B %Y') }}</td>
+            <td>R$ {{ comissao[2] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
