@@ -1,6 +1,8 @@
 import sqlite3
+import locale
+import calendar
 from flask import Flask, render_template, request, redirect, url_for
-from datetime import datetime  # Importe o módulo datetime
+from datetime import datetime
 
 app = Flask(__name__)
 
@@ -30,7 +32,7 @@ def insert_proposta(nome_empresa, cnpj, operadora_plano, data_implantacao, quant
     cursor = conn.cursor()
     cursor.execute('''INSERT INTO propostas (nome_empresa, cnpj, operadora_plano, data_implantacao, quantidade_vidas, valor_proposta, cpf_titular, nome_corretor)
                       VALUES (?, ?, ?, ?, ?, ?, ?, ?)''',
-                   (nome_empresa, cnpj, operadora_plano, data_implantacao, quantidade_vidas, valor_proposta, cpf_titular, nome_corretor))
+                   (nome_empresa, cnpj, operadora_plano, datetime.strptime(data_implantacao, "%d/%m/%Y").strftime("%Y-%m-%d"), quantidade_vidas, valor_proposta, cpf_titular, nome_corretor))
     conn.commit()
     conn.close()
 
@@ -43,16 +45,19 @@ def get_propostas():
     return propostas
 
 def get_comissoes():
+    locale.setlocale(locale.LC_TIME, 'pt_BR.utf8')
+
     conn = connect_db()
     cursor = conn.cursor()
     cursor.execute('SELECT nome_corretor, strftime("%Y-%m", data_implantacao) as mes, SUM(valor_proposta) FROM propostas GROUP BY nome_corretor, mes')
     comissoes = cursor.fetchall()
 
-    # Converta a coluna "mes" em objetos datetime
-    comissoes = [(corretor, datetime.strptime(mes, "%Y-%m"), total) for corretor, mes, total in comissoes]
+    # Converta a coluna "mes" em objetos datetime e obtenha o nome do mês em português
+    comissoes = [(corretor, datetime.strptime(mes, "%Y-%m"), calendar.month_name[datetime.strptime(mes, "%Y-%m").month], total) for corretor, mes, total in comissoes]
 
     conn.close()
     return comissoes
+
 
 @app.route('/')
 def index():
@@ -92,13 +97,17 @@ def detalhes_propostas(nome_corretor, mes):
     # Converta a string de data em um objeto datetime
     mes_datetime = datetime.strptime(mes, "%Y-%m")
 
+    # Obtenha o nome do mês em português
+    mes_portugues = calendar.month_name[mes_datetime.month]
+
     conn = connect_db()
     cursor = conn.cursor()
     cursor.execute('SELECT * FROM propostas WHERE nome_corretor = ? AND strftime("%Y-%m", data_implantacao) = ?', (nome_corretor, mes))
     propostas = cursor.fetchall()
     conn.close()
 
-    return render_template('detalhes_propostas.html', propostas=propostas, nome_corretor=nome_corretor, mes=mes_datetime)
+    return render_template('detalhes_propostas.html', propostas=propostas, nome_corretor=nome_corretor, mes=mes_datetime, mes_portugues=mes_portugues)
+
 
 
 if __name__ == '__main__':

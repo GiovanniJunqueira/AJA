@@ -1,26 +1,152 @@
-<!-- visualizar_comissoes.html -->
 <!DOCTYPE html>
 <html>
 <head>
     <title>Visualizar Comissões</title>
+    <style>
+        body {
+            background-color: #FFD8D8;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            color: black;
+            position: relative;
+        }
+
+        .watermark {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 900px;
+            font-weight: bold;
+            color: #FF0000;
+            opacity: 0.1;
+            pointer-events: none;
+            z-index: -1;
+            background-color: #FFD8D8;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #FF0000;
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+
+        table {
+            margin-top: 20px;
+            border-collapse: collapse;
+            width: 600px;
+            max-width: 100%;
+        }
+
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #FFD8D8;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        label {
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        select {
+            padding: 5px;
+            margin-bottom: 10px;
+        }
+
+        button {
+            background-color: #FF0000;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 12px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease-in-out;
+        }
+
+        button:hover {
+            background-color: #FF8080;
+        }
+    </style>
 </head>
 <body>
+    <div class="watermark">AJA</div>
     <h1>Visualizar Comissões</h1>
-    <table border="1">
+
+    <form method="get" id="filterForm">
+        <label for="mes">Selecione o mês:</label>
+        <select name="mes" id="mes">
+            <option value="01">Janeiro</option>
+            <option value="02">Fevereiro</option>
+            <option value="03">Março</option>
+            <option value="04">Abril</option>
+            <option value="05">Maio</option>
+            <option value="06">Junho</option>
+            <option value="07">Julho</option>
+            <option value="08">Agosto</option>
+            <option value="09">Setembro</option>
+            <option value="10">Outubro</option>
+            <option value="11">Novembro</option>
+            <option value="12">Dezembro</option>
+        </select>
+        <button type="submit">Selecionar</button>
+    </form>
+
+    <table id="comissoesTable">
         <tr>
             <th>Nome do Corretor</th>
             <th>Mês</th>
             <th>Total de Comissão</th>
-            <th>Detalhes</th>  <!-- Adicione uma coluna para o link de detalhes -->
+            <th>Detalhes</th>
         </tr>
-        {% for comissao in comissoes %}
-        <tr>
-            <td>{{ comissao[0] }}</td>
-            <td>{{ comissao[1].strftime('%B %Y') }}</td>
-            <td>R$ {{ comissao[2] }}</td>
-            <td><a href="{{ url_for('detalhes_propostas', nome_corretor=comissao[0], mes=comissao[1].strftime('%Y-%m')) }}">Detalhes</a></td>
-        </tr>
-        {% endfor %}
+        {% if comissoes %}
+            {% for comissao in comissoes %}
+            <tr class="comissaoRow" data-mes="{{ comissao[1].strftime('%m') }}">
+                <td>{{ comissao[0] }}</td>
+                <td>{{ comissao[2] }}</td>
+                <td>R$ {{ "{:,.2f}".format(comissao[3]) }}</td>
+                <td><a href="{{ url_for('detalhes_propostas', nome_corretor=comissao[0], mes=comissao[1].strftime('%Y-%m')) }}">Detalhes</a></td>
+            </tr>
+            {% endfor %}
+        {% else %}
+            <tr>
+                <td colspan="4">Não há vendas neste mês.</td>
+            </tr>
+        {% endif %}
     </table>
+
+    <script>
+        document.getElementById("filterForm").addEventListener("submit", function (event) {
+            event.preventDefault();
+            const selectedMonth = document.getElementById("mes").value;
+            const comissaoRows = document.getElementsByClassName("comissaoRow");
+
+            for (let row of comissaoRows) {
+                const rowMonth = row.getAttribute("data-mes");
+                if (rowMonth !== selectedMonth) {
+                    row.style.display = "none";
+                } else {
+                    row.style.display = "";
+                }
+            }
+        });
+    </script>
 </body>
 </html>
