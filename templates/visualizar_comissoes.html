@@ -120,7 +120,7 @@
             {% for comissao in comissoes %}
             <tr class="comissaoRow" data-mes="{{ comissao[1].strftime('%m') }}">
                 <td>{{ comissao[0] }}</td>
-                <td>{{ comissao[2] }}</td>
+                <td>{{ comissao[1].strftime('%B %Y') }}</td>
                 <td>R$ {{ "{:,.2f}".format(comissao[3]) }}</td>
                 <td><a href="{{ url_for('detalhes_propostas', nome_corretor=comissao[0], mes=comissao[1].strftime('%Y-%m')) }}">Detalhes</a></td>
             </tr>
@@ -131,6 +131,10 @@
             </tr>
         {% endif %}
     </table>
+
+    <!-- Botão de voltar -->
+    <br>
+    <button onclick="window.history.back()">Voltar</button>
 
     <script>
         document.getElementById("filterForm").addEventListener("submit", function (event) {
