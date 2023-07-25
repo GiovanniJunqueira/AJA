@@ -4,43 +4,65 @@
     <title>Pagamento de Comissão</title>
     <style>
         body {
-            background-color: #FFD8D8; /* Vermelho claro */
-            margin: 0; /* Remove margens padrão do body */
+            background-color: #FFD8D8;
+            margin: 0;
             display: flex;
             flex-direction: column;
-            align-items: center; /* Centraliza o conteúdo horizontalmente */
-            justify-content: flex-start; /* Alinha o conteúdo no topo verticalmente */
-            height: 100vh; /* Define a altura do body para ocupar a tela inteira */
-            color: white; /* Cor do texto branco */
+            align-items: center;
+            justify-content: flex-start;
+            height: 100vh;
+            color: white;
         }
 
         h1 {
-            color: red; /* Cor do título "AJA" em vermelho */
-            margin-top: 40px; /* Espaçamento entre o topo da página e o título */
+            color: red;
+            margin-top: 40px;
             font-size: 50px;
         }
 
+        h2 {
+            color: black;
+            font-size: 36px;
+        }
 
-    h2 {
-        color:black;
-        font-size: 36px; 
-    }
         ul {
-            list-style-type: none; /* Remove marcadores da lista */
-            padding: 0; /* Remove o preenchimento padrão da lista */
+            list-style-type: none;
+            padding: 0;
         }
 
         li {
-            margin: 10px 0; /* Define um espaçamento entre os itens da lista */
-            background-color: black; /* Fundo preto */
-            padding: 10px; /* Espaçamento interno */
-            border-radius: 5px; /* Borda arredondada */
+            margin: 10px 0;
+            background-color: black;
+            padding: 10px;
+            border-radius: 5px;
         }
 
         a {
-            text-decoration: none; /* Remove o sublinhado dos links */
-            color: white; /* Cor do texto dos links */
-            font-size: 18px; /* Tamanho da fonte dos links */
+            text-decoration: none;
+            color: white;
+            font-size: 18px;
+        }
+
+        /* Estilos para o botão de limpar tabela */
+        .clear-table-form {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column; /* Posiciona o botão no centro vertical */
+            margin-top: 120px; /* Aumenta o espaçamento do botão em relação aos itens da lista */
+        }
+
+        .clear-table-form button {
+            background-color: white; /* Fundo transparente */
+            color: black; /* Texto preto */
+            border-radius: 5px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .clear-table-form button:hover {
+            background-color: white; /* Efeito de hover com fundo branco */
         }
     </style>
 </head>
@@ -51,6 +73,9 @@
         <li><a href="{{ url_for('registrar_proposta') }}">Registrar Proposta Implantada</a></li>
         <li><a href="{{ url_for('visualizar_comissoes') }}">Visualizar Comissões</a></li>
     </ul>
+    <!-- Novo item para o botão de limpar tabela -->
+    <form class="clear-table-form" method="post" action="{{ url_for('limpar_tabela_view') }}">
+        <button type="submit">Limpar Tabela</button>
+    </form>
 </body>
 </html>
-

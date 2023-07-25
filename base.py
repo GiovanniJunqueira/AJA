@@ -30,9 +30,24 @@ def create_table():
 def insert_proposta(nome_empresa, cnpj, operadora_plano, data_implantacao, quantidade_vidas, valor_proposta, cpf_titular, nome_corretor):
     conn = connect_db()
     cursor = conn.cursor()
+
+    if data_implantacao:
+        data_implantacao = datetime.strptime(data_implantacao, "%Y-%m-%d").strftime("%Y-%m-%d")
+    else:
+        # Caso o campo esteja vazio, atribuímos None para a data_implantacao
+        data_implantacao = None
+
     cursor.execute('''INSERT INTO propostas (nome_empresa, cnpj, operadora_plano, data_implantacao, quantidade_vidas, valor_proposta, cpf_titular, nome_corretor)
                       VALUES (?, ?, ?, ?, ?, ?, ?, ?)''',
-                   (nome_empresa, cnpj, operadora_plano, datetime.strptime(data_implantacao, "%d/%m/%Y").strftime("%Y-%m-%d"), quantidade_vidas, valor_proposta, cpf_titular, nome_corretor))
+                   (nome_empresa, cnpj, operadora_plano, data_implantacao, quantidade_vidas, valor_proposta, cpf_titular, nome_corretor))
+
+    conn.commit()
+    conn.close()
+
+def limpar_tabela():
+    conn = connect_db()
+    cursor = conn.cursor()
+    cursor.execute('DELETE FROM propostas')
     conn.commit()
     conn.close()
 
@@ -108,6 +123,10 @@ def detalhes_propostas(nome_corretor, mes):
 
     return render_template('detalhes_propostas.html', propostas=propostas, nome_corretor=nome_corretor, mes=mes_datetime, mes_portugues=mes_portugues)
 
+@app.route('/limpar_tabela', methods=['POST'])
+def limpar_tabela_view():
+    limpar_tabela()
+    return redirect(url_for('index'))
 
 
 if __name__ == '__main__':
