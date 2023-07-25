@@ -43,7 +43,21 @@
             font-size: 18px;
         }
 
-        /* Estilos para o botão de limpar tabela */
+        .watermark {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 900px;
+            font-weight: bold;
+            color: #FF0000;
+            opacity: 0.1;
+            pointer-events: none;
+            z-index: -1;
+            background-color: #FFD8D8;
+            padding: 20px;
+        }
+        
         .clear-table-form {
             display: flex;
             align-items: center;
@@ -67,6 +81,7 @@
     </style>
 </head>
 <body>
+    <div class="watermark">AJA</div>
     <h1>AJA</h1>
     <h2>Menu Principal</h2>
     <ul>

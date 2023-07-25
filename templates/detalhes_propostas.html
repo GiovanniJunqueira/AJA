@@ -1,11 +1,80 @@
-<!-- detalhes_propostas.html -->
 <!DOCTYPE html>
 <html>
 <head>
     <title>Detalhes das Propostas</title>
+    <style>
+        body {
+            background-color: #FFD8D8;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 87vh;
+            color: black;
+        }
+
+        .watermark {
+            font-size: 900px;
+            font-weight: bold;
+            color: #FF0000;
+            opacity: 0.1;
+            pointer-events: none;
+            z-index: -1;
+            background-color: #FFD8D8;
+            padding: 20px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        h1 {
+            color: #FF0000;
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+
+        table {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            width: 800px;
+            margin-top: 10px;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: center;
+        }
+
+        th {
+            font-weight: bold;
+        }
+
+        .back-button {
+            margin-top: 20px;
+            background-color: #333;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 15px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease-in-out;
+            width: auto;
+        }
+
+        .back-button:hover {
+            background-color: #555;
+        }
+    </style>
 </head>
 <body>
-    <h1>Detalhes das Propostas para {{ nome_corretor }} no mês de {{ mes.strftime('%B %Y') }}</h1>
+    <div class="watermark">AJA</div>
+    <h1>Detalhes das Propostas para {{ nome_corretor }} no mês de {{ mes_portugues }} {{ mes.strftime('%Y') }}</h1>
     <table border="1">
         <tr>
             <th>ID</th>
@@ -30,5 +99,6 @@
         </tr>
         {% endfor %}
     </table>
+    <button class="back-button" onclick="window.history.back()">Voltar</button>
 </body>
 </html>
