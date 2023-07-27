@@ -19,7 +19,7 @@ def create_table():
                       nome_empresa TEXT,
                       cnpj TEXT,
                       operadora_plano TEXT,
-                      data_implantacao TEXT, -- Altere para o tipo TEXT para manter a data como string
+                      data_implantacao TEXT, 
                       quantidade_vidas INTEGER,
                       valor_proposta REAL,
                       cpf_titular TEXT,
@@ -67,7 +67,7 @@ def get_comissoes():
     cursor.execute('SELECT nome_corretor, strftime("%Y-%m", data_implantacao) as mes, SUM(valor_proposta) FROM propostas GROUP BY nome_corretor, mes')
     comissoes = cursor.fetchall()
 
-    # Converta a coluna "mes" em objetos datetime e obtenha o nome do mês em português
+    # Converter a coluna "mes" em objetos datetime e obtenher o nome do mês em português
     comissoes = [(corretor, datetime.strptime(mes, "%Y-%m"), calendar.month_name[datetime.strptime(mes, "%Y-%m").month], total) for corretor, mes, total in comissoes]
 
     conn.close()
@@ -100,7 +100,6 @@ def registrar_proposta():
 def visualizar_comissoes():
     comissoes = get_comissoes()
 
-    # Adicione mensagens de depuração para verificar os dados recuperados
     print("Dados de comissões:")
     for comissao in comissoes:
         print(comissao)
@@ -109,10 +108,10 @@ def visualizar_comissoes():
 
 @app.route('/detalhes_propostas/<string:nome_corretor>/<string:mes>')
 def detalhes_propostas(nome_corretor, mes):
-    # Converta a string de data em um objeto datetime
+    # Converter a string de data em um objeto datetime
     mes_datetime = datetime.strptime(mes, "%Y-%m")
 
-    # Obtenha o nome do mês em português
+    # Obtenher o nome do mês em português
     mes_portugues = calendar.month_name[mes_datetime.month]
 
     conn = connect_db()
